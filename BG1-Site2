@@ -1,0 +1,538 @@
+#show running-config
+!Command: show running-config
+!Running configuration last done at: Thu May  2 13:16:16 2024
+!Time: Thu May  2 13:45:13 2024
+
+version 10.4(3) Bios:version  
+hostname BG1-Site2
+vdc BG1-Site2 id 1
+  limit-resource vlan minimum 16 maximum 4094
+  limit-resource vrf minimum 2 maximum 4096
+  limit-resource port-channel minimum 0 maximum 511
+  limit-resource m4route-mem minimum 58 maximum 58
+  limit-resource m6route-mem minimum 8 maximum 8
+
+feature nxapi
+cfs eth distribute
+nv overlay evpn
+feature ospf
+feature bgp
+feature pim
+feature interface-vlan
+feature vn-segment-vlan-based
+feature lacp
+feature dhcp
+feature lldp
+feature nv overlay
+evpn multisite border-gateway 65525
+  delay-restore time 300
+
+no password strength-check
+username admin password 5 $5$NCEKOD$xJ6pTfatddA/h/qREOc7g9I6VSSaMEiq9QdYzj74r1. 
+ role network-admin
+ip domain-lookup
+copp profile strict
+snmp-server user admin network-admin auth md5 054F56D7E32A33520CA8740E437B38C401
+FD localizedV2key
+rmon event 1 log trap public description FATAL(1) owner PMON@FATAL
+rmon event 2 log trap public description CRITICAL(2) owner PMON@CRITICAL
+rmon event 3 log trap public description ERROR(3) owner PMON@ERROR
+rmon event 4 log trap public description WARNING(4) owner PMON@WARNING
+rmon event 5 log trap public description INFORMATION(5) owner PMON@INFO
+
+fabric forwarding anycast-gateway-mac 2020.0000.00aa
+ipv6 switch-packets lla
+ip pim rp-address 10.10.106.1 group-list 239.1.2.0/25
+ip pim ssm range 232.0.0.0/8
+vlan 1,20,40,2000
+vlan 20
+  vn-segment 30020
+vlan 40
+  vn-segment 30040
+vlan 2000
+  vn-segment 50000
+
+route-map fabric-rmap-redist-subnet permit 10
+  match tag 12345 
+route-map rmap-redist-direct permit 10
+  match tag 54321 
+service dhcp
+ip dhcp relay
+ip dhcp relay information option
+ip dhcp relay information option vpn
+ipv6 dhcp relay
+vrf context management
+vrf context msd-vrf
+  vni 50000
+  rd auto
+  address-family ipv4 unicast
+    route-target both auto
+    route-target both auto evpn
+  address-family ipv6 unicast
+    route-target both auto
+    route-target both auto evpn
+
+nxapi http port 80
+
+
+interface Vlan1
+
+interface Vlan2000
+  no shutdown
+  mtu 9216
+  vrf member msd-vrf
+  no ip redirects
+  ip forward
+  ipv6 address use-link-local-only
+  no ipv6 redirects
+
+interface nve1
+  no shutdown
+  host-reachability protocol bgp
+  source-interface loopback1
+  multisite border-gateway interface loopback100
+  member vni 30020
+    multisite ingress-replication
+    mcast-group 239.1.2.1
+  member vni 30040
+    multisite ingress-replication
+    mcast-group 239.1.2.1
+  member vni 50000 associate-vrf
+
+interface Ethernet1/1
+  description connected-to-S1-Site2-Ethernet1/3
+  no switchport
+  mtu 9216
+  ip address 10.10.192.22/30
+  ip ospf network point-to-point
+  ip router ospf UNDERLAY area 0.0.0.0
+  ip pim sparse-mode
+  no shutdown
+  evpn multisite fabric-tracking
+
+interface Ethernet1/2
+  description connected-to-S2-Site2-Ethernet1/3
+  no switchport
+  mtu 9216
+  ip address 10.10.192.18/30
+  ip ospf network point-to-point
+  ip router ospf UNDERLAY area 0.0.0.0
+  ip pim sparse-mode
+  no shutdown
+  evpn multisite fabric-tracking
+
+interface Ethernet1/3
+  no switchport
+  mtu 9216
+  ip address 10.10.3.22/30 tag 54321
+  no shutdown
+  evpn multisite dci-tracking
+
+interface Ethernet1/4
+  no switchport
+  mtu 9216
+  ip address 10.10.3.18/30 tag 54321
+  no shutdown
+  evpn multisite dci-tracking
+
+interface Ethernet1/5
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/6
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/7
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/8
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/9
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/10
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/11
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/12
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/13
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/14
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/15
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/16
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/17
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/18
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/19
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/20
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/21
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/22
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/23
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/24
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/25
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/26
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/27
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/28
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/29
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/30
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/31
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/32
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/33
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/34
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/35
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/36
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/37
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/38
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/39
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/40
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/41
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/42
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/43
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/44
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/45
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/46
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/47
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/48
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/49
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/50
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/51
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/52
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/53
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/54
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/55
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/56
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/57
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/58
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/59
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/60
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/61
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/62
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/63
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/64
+  no switchport
+  mtu 9216
+  no shutdown
+
+interface mgmt0
+  no cdp enable
+  vrf member management
+  ip address 10.14.14.195/24
+
+interface loopback0
+  description Routing loopback interface
+  ip address 10.10.102.1/32 tag 54321
+  ip router ospf UNDERLAY area 0.0.0.0
+  ip pim sparse-mode
+
+interface loopback1
+  description VTEP loopback interface
+  ip address 10.10.104.1/32 tag 54321
+  ip router ospf UNDERLAY area 0.0.0.0
+  ip pim sparse-mode
+
+interface loopback100
+  ip address 10.10.100.2/32 tag 54321
+  ip router ospf UNDERLAY area 0.0.0.0
+  ip pim sparse-mode
+icam monitor scale
+
+line console
+line vty
+boot nxos bootflash:/nxos64-cs.10.4.3.F.bin 
+router ospf UNDERLAY
+  router-id 10.10.102.1
+router bgp 65525
+  router-id 10.10.102.1
+  address-family ipv4 unicast
+    redistribute direct route-map rmap-redist-direct
+    maximum-paths 64
+    maximum-paths ibgp 64
+  address-family ipv6 unicast
+    maximum-paths 64
+    maximum-paths ibgp 64
+  neighbor 10.10.3.17
+    remote-as 65525
+    log-neighbor-changes
+    update-source Ethernet1/4
+    address-family ipv4 unicast
+      send-community
+      send-community extended
+      next-hop-self
+  neighbor 10.10.3.21
+    remote-as 65525
+    log-neighbor-changes
+    update-source Ethernet1/3
+    address-family ipv4 unicast
+      send-community
+      send-community extended
+      next-hop-self
+  neighbor 10.10.101.2
+    remote-as 65125
+    update-source loopback0
+    ebgp-multihop 5
+    peer-type fabric-external
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+      rewrite-evpn-rt-asn
+  neighbor 10.10.101.5
+    remote-as 65125
+    update-source loopback0
+    ebgp-multihop 5
+    peer-type fabric-external
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+      rewrite-evpn-rt-asn
+  neighbor 10.10.102.2
+    remote-as 65525
+    update-source loopback0
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+  neighbor 10.10.102.3
+    remote-as 65525
+    update-source loopback0
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+  vrf msd-vrf
+    address-family ipv4 unicast
+      advertise l2vpn evpn
+      redistribute direct route-map fabric-rmap-redist-subnet
+      maximum-paths ibgp 2
+    address-family ipv6 unicast
+      advertise l2vpn evpn
+      redistribute direct route-map fabric-rmap-redist-subnet
+      maximum-paths ibgp 2
+evpn
+  vni 30020 l2
+    rd auto
+    route-target import auto
+    route-target export auto
+  vni 30040 l2
+    rd auto
+    route-target import auto
+    route-target export auto
