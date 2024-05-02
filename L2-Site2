@@ -1,0 +1,573 @@
+#show running-config
+!Command: show running-config
+!No configuration change since last restart
+!Time: Thu May  2 19:57:07 2024
+
+version 10.4(3) Bios:version  
+hostname L2-Site2
+vdc L2-Site2 id 1
+  limit-resource vlan minimum 16 maximum 4094
+  limit-resource vrf minimum 2 maximum 4096
+  limit-resource port-channel minimum 0 maximum 511
+  limit-resource m4route-mem minimum 58 maximum 58
+  limit-resource m6route-mem minimum 8 maximum 8
+
+feature nxapi
+cfs eth distribute
+nv overlay evpn
+feature ospf
+feature bgp
+feature pim
+feature interface-vlan
+feature vn-segment-vlan-based
+feature lacp
+feature dhcp
+feature vpc
+feature lldp
+feature nv overlay
+
+username admin password 5 $5$PGJAKC$zZGSzLfyHg77/ZCgZ4wlH3p1hIMbZl79D1ZX.IkYBu4  role network-admin
+ip domain-lookup
+copp profile strict
+snmp-server user admin network-admin auth md5 5304E5FAEA12E22874300C27A1554561F798 localizedV2key
+rmon event 1 log trap public description FATAL(1) owner PMON@FATAL
+rmon event 2 log trap public description CRITICAL(2) owner PMON@CRITICAL
+rmon event 3 log trap public description ERROR(3) owner PMON@ERROR
+rmon event 4 log trap public description WARNING(4) owner PMON@WARNING
+rmon event 5 log trap public description INFORMATION(5) owner PMON@INFO
+
+fabric forwarding anycast-gateway-mac 2020.0000.00aa
+ipv6 switch-packets lla
+ip pim rp-address 10.10.106.1 group-list 239.1.2.0/25
+ip pim ssm range 232.0.0.0/8
+vlan 1,20,40,2000,3600
+vlan 20
+  vn-segment 30020
+vlan 40
+  vn-segment 30040
+vlan 2000
+  vn-segment 50000
+
+route-map fabric-rmap-redist-subnet permit 10
+  match tag 12345 
+service dhcp
+ip dhcp relay
+ip dhcp relay information option
+ip dhcp relay information option vpn
+ipv6 dhcp relay
+vrf context management
+vrf context msd-vrf
+  vni 50000
+  rd auto
+  address-family ipv4 unicast
+    route-target both auto
+    route-target both auto evpn
+  address-family ipv6 unicast
+    route-target both auto
+    route-target both auto evpn
+vpc domain 1
+  peer-switch
+  peer-keepalive destination 10.14.14.191 source 10.14.14.192
+  delay restore 150
+  peer-gateway
+  auto-recovery reload-delay 360
+  ip arp synchronize
+
+nxapi http port 80
+
+
+interface Vlan1
+  no ip redirects
+  no ipv6 redirects
+
+interface Vlan20
+  no shutdown
+  vrf member msd-vrf
+  no ip redirects
+  ip address 10.10.20.1/24 tag 12345
+  no ipv6 redirects
+  fabric forwarding mode anycast-gateway
+
+interface Vlan40
+  no shutdown
+  vrf member msd-vrf
+  no ip redirects
+  ip address 10.10.40.1/24 tag 12345
+  no ipv6 redirects
+  fabric forwarding mode anycast-gateway
+
+interface Vlan2000
+  no shutdown
+  mtu 9216
+  vrf member msd-vrf
+  no ip redirects
+  ip forward
+  ipv6 address use-link-local-only
+  no ipv6 redirects
+
+interface Vlan3600
+  description VPC-Peer-Link SVI
+  no shutdown
+  mtu 9216
+  no ip redirects
+  ip address 10.10.192.33/30
+  no ipv6 redirects
+  ip ospf network point-to-point
+  ip router ospf UNDERLAY area 0.0.0.0
+  ip pim sparse-mode
+
+interface port-channel500
+  description "vpc-peer-link L2-Site2--L1-Site2"
+  switchport mode trunk
+  spanning-tree port type network
+  vpc peer-link
+
+interface Ethernet1/1
+  description connected-to-S1-Site2-Ethernet1/2
+  no switchport
+  mtu 9216
+  ip address 10.10.192.10/30
+  ip ospf network point-to-point
+  ip router ospf UNDERLAY area 0.0.0.0
+  ip pim sparse-mode
+  no shutdown
+
+interface Ethernet1/2
+  description connected-to-S2-Site2-Ethernet1/2
+  no switchport
+  mtu 9216
+  ip address 10.10.192.5/30
+  ip ospf network point-to-point
+  ip router ospf UNDERLAY area 0.0.0.0
+  ip pim sparse-mode
+  no shutdown
+
+interface Ethernet1/3
+  switchport access vlan 40
+  spanning-tree port type edge
+  spanning-tree bpduguard enable
+  mtu 9216
+
+interface Ethernet1/4
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/5
+  description "PO 500 (vpc-peer-link) member L2-Site2-Ethernet1/5 to L1-Site2-Ethernet1/5"
+  switchport mode trunk
+  channel-group 500 mode active
+
+interface Ethernet1/6
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/7
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/8
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/9
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/10
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/11
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/12
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/13
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/14
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/15
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/16
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/17
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/18
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/19
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/20
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/21
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/22
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/23
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/24
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/25
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/26
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/27
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/28
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/29
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/30
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/31
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/32
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/33
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/34
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/35
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/36
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/37
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/38
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/39
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/40
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/41
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/42
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/43
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/44
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/45
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/46
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/47
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/48
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/49
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/50
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/51
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/52
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/53
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/54
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/55
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/56
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/57
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/58
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/59
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/60
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/61
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/62
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/63
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface Ethernet1/64
+  switchport mode trunk
+  switchport trunk allowed vlan none
+  spanning-tree port type edge trunk
+  mtu 9216
+
+interface mgmt0
+  no cdp enable
+  vrf member management
+  ip address 10.14.14.192/24
+
+interface loopback0
+  description Routing loopback interface
+  ip address 10.10.102.6/32
+  ip router ospf UNDERLAY area 0.0.0.0
+  ip pim sparse-mode
+
+interface loopback1
+  description VTEP loopback interface
+  ip address 10.10.104.4/32
+  ip address 10.10.104.5/32 secondary
+  ip router ospf UNDERLAY area 0.0.0.0
+  ip pim sparse-mode
+icam monitor scale
+
+line console
+line vty
+boot nxos bootflash:/nxos64-cs.10.4.3.F.bin 
+router ospf UNDERLAY
+  router-id 10.10.102.6
+router bgp 65525
+  router-id 10.10.102.6
+  address-family l2vpn evpn
+    advertise-pip
+  neighbor 10.10.102.2
+    remote-as 65525
+    update-source loopback0
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+  neighbor 10.10.102.3
+    remote-as 65525
+    update-source loopback0
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+  vrf msd-vrf
+    address-family ipv4 unicast
+      advertise l2vpn evpn
+      redistribute direct route-map fabric-rmap-redist-subnet
+      maximum-paths ibgp 2
+    address-family ipv6 unicast
+      advertise l2vpn evpn
+      redistribute direct route-map fabric-rmap-redist-subnet
+      maximum-paths ibgp 2
+evpn
+  vni 30020 l2
+    rd auto
+    route-target import auto
+    route-target export auto
+  vni 30040 l2
+    rd auto
+    route-target import auto
+    route-target export auto

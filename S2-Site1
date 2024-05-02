@@ -1,0 +1,369 @@
+#show running-config
+!Command: show running-config
+!No configuration change since last restart
+!Time: Thu May  2 19:50:35 2024
+
+version 10.4(3) Bios:version  
+hostname S2-Site1
+vdc S2-Site1 id 1
+  limit-resource vlan minimum 16 maximum 4094
+  limit-resource vrf minimum 2 maximum 4096
+  limit-resource port-channel minimum 0 maximum 511
+  limit-resource m4route-mem minimum 58 maximum 58
+  limit-resource m6route-mem minimum 8 maximum 8
+
+feature nxapi
+nv overlay evpn
+feature ospf
+feature bgp
+feature pim
+feature lldp
+
+username admin password 5 $5$GPCHPE$6czL3DdSa7JED5UBu3J8UT9wXf6Gag/w3ijHgLfpGq4  role network-admin
+ip domain-lookup
+copp profile strict
+snmp-server user admin network-admin auth md5 176CA87B3B0F3576976CA50BE82716C08232 priv aes-128 5212AF4906724512F11CE358F57F1191833D localizedV2key
+rmon event 1 log trap public description FATAL(1) owner PMON@FATAL
+rmon event 2 log trap public description CRITICAL(2) owner PMON@CRITICAL
+rmon event 3 log trap public description ERROR(3) owner PMON@ERROR
+rmon event 4 log trap public description WARNING(4) owner PMON@WARNING
+rmon event 5 log trap public description INFORMATION(5) owner PMON@INFO
+
+ipv6 switch-packets lla
+ip pim rp-address 10.10.105.1 group-list 239.1.1.0/25
+ip pim ssm range 232.0.0.0/8
+ip pim anycast-rp 10.10.105.1 10.10.101.4
+ip pim anycast-rp 10.10.105.1 10.10.101.6
+vlan 1
+
+vrf context management
+nxapi http port 80
+
+
+interface Ethernet1/1
+  description connected-to-L1-Site1-Ethernet1/2
+  mtu 9216
+  ip address 10.10.128.14/30
+  ip ospf network point-to-point
+  ip router ospf UNDERLAY area 0.0.0.0
+  ip pim sparse-mode
+  no shutdown
+
+interface Ethernet1/2
+  description connected-to-L2-Site1-Ethernet1/2
+  mtu 9216
+  ip address 10.10.128.34/30
+  ip ospf network point-to-point
+  ip router ospf UNDERLAY area 0.0.0.0
+  ip pim sparse-mode
+  no shutdown
+
+interface Ethernet1/3
+  description connected-to-BG1-Site1-Ethernet1/2
+  mtu 9216
+  ip address 10.10.128.6/30
+  ip ospf network point-to-point
+  ip router ospf UNDERLAY area 0.0.0.0
+  ip pim sparse-mode
+  no shutdown
+
+interface Ethernet1/4
+  description connected-to-BG2-Site1-Ethernet1/2
+  mtu 9216
+  ip address 10.10.128.26/30
+  ip ospf network point-to-point
+  ip router ospf UNDERLAY area 0.0.0.0
+  ip pim sparse-mode
+  no shutdown
+
+interface Ethernet1/5
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/6
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/7
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/8
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/9
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/10
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/11
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/12
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/13
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/14
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/15
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/16
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/17
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/18
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/19
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/20
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/21
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/22
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/23
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/24
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/25
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/26
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/27
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/28
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/29
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/30
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/31
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/32
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/33
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/34
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/35
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/36
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/37
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/38
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/39
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/40
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/41
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/42
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/43
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/44
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/45
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/46
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/47
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/48
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/49
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/50
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/51
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/52
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/53
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/54
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/55
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/56
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/57
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/58
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/59
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/60
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/61
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/62
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/63
+  mtu 9216
+  no shutdown
+
+interface Ethernet1/64
+  mtu 9216
+  no shutdown
+
+interface mgmt0
+  no cdp enable
+  vrf member management
+  ip address 10.14.14.94/24
+
+interface loopback0
+  description Routing loopback interface
+  ip address 10.10.101.6/32
+  ip router ospf UNDERLAY area 0.0.0.0
+  ip pim sparse-mode
+
+interface loopback254
+  description RP loopback interface
+  ip address 10.10.105.1/32
+  ip router ospf UNDERLAY area 0.0.0.0
+  ip pim sparse-mode
+line console
+line vty
+boot nxos bootflash:/nxos64-cs.10.4.3.F.bin 
+router ospf UNDERLAY
+  router-id 10.10.101.6
+router bgp 65125
+  router-id 10.10.101.6
+  neighbor 10.10.101.1
+    remote-as 65125
+    update-source loopback0
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+      route-reflector-client
+  neighbor 10.10.101.2
+    remote-as 65125
+    update-source loopback0
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+      route-reflector-client
+  neighbor 10.10.101.3
+    remote-as 65125
+    update-source loopback0
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+      route-reflector-client
+  neighbor 10.10.101.5
+    remote-as 65125
+    update-source loopback0
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+      route-reflector-client
