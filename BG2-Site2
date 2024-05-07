@@ -84,6 +84,17 @@ interface Vlan2000
   ipv6 address use-link-local-only
   no ipv6 redirects
 
+interface nve1
+  no shutdown
+  host-reachability protocol bgp
+  advertise virtual-rmac
+  source-interface loopback1
+  member vni 30020
+    mcast-group 239.1.1.1
+  member vni 30040
+    mcast-group 239.1.1.1
+  member vni 50000 associate-vrf
+
 interface Ethernet1/1
   description connected-to-S1-Site2-Ethernet1/4
   no switchport
